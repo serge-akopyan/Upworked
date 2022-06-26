@@ -1,7 +1,43 @@
 body {
     background-color: #F1F2F4;
+    margin: auto;
+    width: 70%;
+}
+
+ul {
+    display: flex;
+    justify-content: flex-start;
+}
+
+li {
+    list-style-type: none;
+    margin-right: 10px;
 }
 
 header {
-    background-color: blue;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+}
+
+#keywords {
+    display: flex;
+    flex-direction: column-reverse;
+    background-color: aquamarine;
+    overflow-y: scroll;
+}
+
+#viewport {
+    background-color: blueviolet;
+}
+
+#viewport input{
+    height: 500px;
+    width: 500px;
+    background-color: crimson;
 }
