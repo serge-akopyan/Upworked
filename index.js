@@ -14,6 +14,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+//add data
+
 window.addKeyword = function(){
     var key = document.getElementById("key").value;
     var content = document.getElementById("content").value;
@@ -23,11 +25,15 @@ window.addKeyword = function(){
     alert('Saved')
 }
 
+//count data
+
 onValue(ref(database, 'keywords/'), (snapData) => {
     console.log(Object.keys(snapData.val()).length) // 👈
   })
 
 const databaseRef = ref(database, 'keywords/');
+
+//read data
 
 onValue(databaseRef, (snapshot) => {
     snapshot.forEach((childSnapshot) => {
