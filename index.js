@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js';
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
+import { getDatabase, ref, set, onValue, get, child } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA0talSsClqVn3WYI7HG73G1VgMw0FC2AI",
@@ -22,3 +22,30 @@ window.addKeyword = function(){
     });
     alert('Saved')
 }
+
+onValue(ref(database, 'keywords/'), (snapData) => {
+    console.log(Object.keys(snapData.val()).length) // 👈
+  })
+
+const databaseRef = ref(database, 'keywords/');
+
+onValue(databaseRef, (snapshot) => {
+    snapshot.forEach((childSnapshot) => {
+
+      const childKey = childSnapshot.key;
+      const childData = childSnapshot.val();
+
+      var newInput = document.createElement('input');
+      newInput.value = childKey;
+      newInput.id = childKey;
+
+      var keywords = document.getElementById("keywords");
+      keywords.appendChild(newInput);
+
+      console.log(childKey);
+      console.log(childData);
+    });
+  }, {
+    onlyOnce: true
+  });
+
