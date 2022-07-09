@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js';
-import { getDatabase, ref, set, onValue, get, child } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
+import { getDatabase, ref, set, onValue, get, child, update } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA0talSsClqVn3WYI7HG73G1VgMw0FC2AI",
@@ -42,6 +42,7 @@ onValue(databaseRef, (snapshot) => {
       const childData = childSnapshot.val();
 
       var newInput = document.createElement('input');
+
       newInput.value = childKey;
       newInput.id = childKey;
 
@@ -53,5 +54,19 @@ onValue(databaseRef, (snapshot) => {
     });
   }, {
     onlyOnce: true
-  });
+});
 
+//update data
+
+window.updateKeyword = function(key, newKey){
+  update(ref(database, 'keywords/' + key),{
+    key: newKey
+  });
+}
+
+
+//select an input
+const delegate = (selector) => (cb) => (e) => e.target.matches(selector) && cb(e);
+const inputDelegate = delegate('input');
+const container = document.getElementById("keywords")
+container.addEventListener('change', inputDelegate((el) => updateKeyword(el.target.id, el.target.value)));
