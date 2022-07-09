@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js';
-import { getDatabase, ref, set, onValue, get, child, update } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
+import { getDatabase, ref, set, onValue, get, child, update, remove } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA0talSsClqVn3WYI7HG73G1VgMw0FC2AI",
@@ -59,9 +59,13 @@ onValue(databaseRef, (snapshot) => {
 //update data
 
 window.updateKeyword = function(key, newKey){
-  update(ref(database, 'keywords/' + key),{
-    key: newKey
+  update(ref(database, 'keywords/' + newKey),{
+    content: newKey
   });
+  remove(ref(database, 'keywords/' + key),{
+    content: newKey
+  });
+  alert("Updated");
 }
 
 
