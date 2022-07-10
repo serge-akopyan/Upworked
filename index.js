@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js';
-import { getDatabase, ref, set, onValue, get, child, update, remove } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
+import { getDatabase, ref, onValue, update, remove, push } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA0talSsClqVn3WYI7HG73G1VgMw0FC2AI",
@@ -16,20 +16,27 @@ const database = getDatabase(app);
 
 //add data
 
+// window.addKeyword = function(){
+//     var addInput = document.createElement('input');
+//     push(ref(database, 'keywords/'),{
+//       key: "",
+//       content: ""
+//     });
+//     var keywords = document.getElementById("keywords");
+//     keywords.appendChild(addInput);
+// }
+
 window.addKeyword = function(){
-    var key = document.getElementById("key").value;
-    var content = document.getElementById("content").value;
-    set(ref(database, 'keywords/' + key),{
-        content: content
-    });
-    alert('Saved')
+  var addInput = document.createElement('input');
+  var keywords = document.getElementById("keywords");
+  keywords.appendChild(addInput);
 }
 
 //count data
 
-onValue(ref(database, 'keywords/'), (snapData) => {
-    console.log(Object.keys(snapData.val()).length) // 👈
-  })
+// onValue(ref(database, 'keywords/'), (snapData) => {
+//     console.log(Object.keys(snapData.val()).length) // 👈
+//   })
 
 const databaseRef = ref(database, 'keywords/');
 
@@ -39,22 +46,25 @@ onValue(databaseRef, (snapshot) => {
     snapshot.forEach((childSnapshot) => {
 
       const childKey = childSnapshot.key;
-      const childData = childSnapshot.val();
+      
+      const findKey = ref(database, 'keywords/' + childKey + '/key');
+      var keyword = "";
+
+      onValue(findKey, (snapshot) => {
+        keyword = snapshot.val();
+      });
 
       var newInput = document.createElement('input');
 
-      newInput.value = childKey;
+      newInput.value = keyword;
       newInput.id = childKey;
 
       var keywords = document.getElementById("keywords");
       keywords.appendChild(newInput);
 
       console.log(childKey);
-      console.log(childData);
     });
-  }, {
-    onlyOnce: true
-});
+  },);
 
 //update data
 
@@ -62,9 +72,9 @@ window.updateKeyword = function(key, newKey){
   update(ref(database, 'keywords/' + newKey),{
     content: newKey
   });
-  remove(ref(database, 'keywords/' + key),{
-    content: newKey
-  });
+  // remove(ref(database, 'keywords/' + key),{
+  //   content: newKey
+  // });
   alert("Updated");
 }
 
@@ -74,3 +84,26 @@ const delegate = (selector) => (cb) => (e) => e.target.matches(selector) && cb(e
 const inputDelegate = delegate('input');
 const container = document.getElementById("keywords")
 container.addEventListener('change', inputDelegate((el) => updateKeyword(el.target.id, el.target.value)));
+container.addEventListener('focusin', inputDelegate((el) => showContent(el.target.id)));
+
+
+
+//show content
+
+var viewport = document.getElementById("viewport");
+
+window.showContent = function(inputID){
+  const keyContent = ref(database, 'keywords/' + inputID + "/content");
+  onValue(keyContent, (snapshot) => {
+    const data = snapshot.val();
+    viewport.value = data;
+  })
+}
+
+//update content
+
+window.updateContent = function(){
+  //alert("Content updated");
+}
+
+viewport.addEventListener('input', updateContent());

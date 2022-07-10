@@ -9,3 +9,8 @@ main {
     display: flex;
     flex-direction: row;
 }
+
+#keywords {
+    display: flex;
+    flex-direction: column;
+}
